@@ -1,2 +1,4 @@
-<h1>Products#show</h1>
-<p>Find me in app/views/products/show.html.erb</p>
+<h2><%= @product.name %></h2>
+<%= image_tag @product.image, size: "300x300" if @product.image.attached? %>
+<p><%= @product.description %></p>
+<p><strong>Price: </strong><%= number_to_currency(@product.price) %></p>
