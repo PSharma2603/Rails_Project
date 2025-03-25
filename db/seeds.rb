@@ -7,4 +7,24 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-AdminUser.create!(email: 'psharma9@rrc.ca', password: 'password', password_confirmation: 'password') if Rails.env.development?
+AdminUser.find_or_create_by!(email: 'psharma9@rrc.ca') do |user|
+    user.password = 'password'
+    user.password_confirmation = 'password'
+  end if Rails.env.development?
+  
+Category.destroy_all
+Product.destroy_all
+
+categories = %w[Smartphones Laptops Gaming SmartHome].map do |cat|
+  Category.create!(name: cat)
+end
+
+10.times do
+  Product.create!(
+    name: Faker::Device.model_name,
+    description: Faker::Lorem.sentence(word_count: 12),
+    price: rand(100..2000),
+    stock_quantity: rand(1..50),
+    category: categories.sample
+  )
+end
