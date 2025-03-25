@@ -1,4 +1,8 @@
-<h2><%= @product.name %></h2>
-<%= image_tag @product.image, size: "300x300" if @product.image.attached? %>
-<p><%= @product.description %></p>
-<p><strong>Price: </strong><%= number_to_currency(@product.price) %></p>
+<div class="container mt-5">
+  <h2><%= @product.name %></h2>
+  <p><strong>Category:</strong> <%= @product.category.name %></p>
+  <p><strong>Description:</strong> <%= @product.description %></p>
+  <p><strong>Price:</strong> $<%= @product.price %></p>
+  <p><strong>Stock:</strong> <%= @product.stock_quantity %> available</p>
+  <%= link_to "Back to Store", root_path, class: "btn btn-secondary mt-3" %>
+</div>

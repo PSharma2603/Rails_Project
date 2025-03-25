@@ -1,8 +1,18 @@
-<h2>All Products</h2>
-<% @products.each do |product| %>
-  <div>
-    <%= image_tag product.image, size: "200x200" if product.image.attached? %>
-    <h3><%= link_to product.name, product_path(product) %></h3>
-    <p><%= number_to_currency(product.price) %></p>
+<h1 class="text-center my-4">Welcome to Technova Store</h1>
+
+<div class="container">
+  <div class="row">
+    <% @products.each do |product| %>
+      <div class="col-md-3 mb-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title"><%= product.name %></h5>
+            <p class="card-text">Price: $<%= product.price %></p>
+            <p class="card-text">Category: <%= product.category.name %></p>
+            <%= link_to "View Product", product_path(product), class: "btn btn-primary" %>
+          </div>
+        </div>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>
