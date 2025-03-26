@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "static_pages/show"
   get "products/index"
   get "products/show"
   devise_for :admin_users, ActiveAdmin::Devise.config
@@ -14,6 +15,8 @@ Rails.application.routes.draw do
   get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   root 'products#index'
   resources :products, only: [:index, :show]
+
+  get "/pages/:id", to: "static_pages#show", as: "static_page"
 
 
 
