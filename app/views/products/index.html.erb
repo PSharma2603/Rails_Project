@@ -1,31 +1,33 @@
 <h1 class="text-center my-4">Welcome to Technova Store</h1>
 
 <div class="container">
-<div class="container mb-4">
-  <%= form_with url: products_path, method: :get, local: true, class: "row g-3 align-items-center" do %>
-    <div class="col-auto">
-      <%= label_tag :q, "Search", class: "col-form-label" %>
-    </div>
-    <div class="col-auto">
-      <%= text_field_tag :q, params[:q], class: "form-control", placeholder: "Search products..." %>
-    </div>
+  <!-- Search + Category Filter Form -->
+  <div class="container mb-4">
+    <%= form_with url: products_path, method: :get, local: true, class: "row g-3 align-items-center" do %>
+      <div class="col-auto">
+        <%= label_tag :q, "Search", class: "col-form-label" %>
+      </div>
+      <div class="col-auto">
+        <%= text_field_tag :q, params[:q], class: "form-control", placeholder: "Search products..." %>
+      </div>
 
-    <div class="col-auto">
-      <%= label_tag :category_id, "Category", class: "col-form-label" %>
-    </div>
-    <div class="col-auto">
-      <%= select_tag :category_id,
-          options_from_collection_for_select(@categories, :id, :name, params[:category_id]),
-          include_blank: "All Categories",
-          class: "form-select" %>
-    </div>
+      <div class="col-auto">
+        <%= label_tag :category_id, "Category", class: "col-form-label" %>
+      </div>
+      <div class="col-auto">
+        <%= select_tag :category_id,
+            options_from_collection_for_select(@categories, :id, :name, params[:category_id]),
+            include_blank: "All Categories",
+            class: "form-select" %>
+      </div>
 
-    <div class="col-auto">
-      <%= submit_tag "Search", class: "btn btn-primary" %>
-    </div>
-  <% end %>
-</div>
+      <div class="col-auto">
+        <%= submit_tag "Search", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
 
+  <!-- Product Cards -->
   <div class="row">
     <% @products.each do |product| %>
       <div class="col-md-3 mb-4">
@@ -42,5 +44,10 @@
         </div>
       </div>
     <% end %>
+  </div>
+
+  <!-- Pagination -->
+  <div class="d-flex justify-content-center mt-4">
+    <%= paginate @products %>
   </div>
 </div>

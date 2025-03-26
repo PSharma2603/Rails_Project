@@ -1,7 +1,12 @@
-<ul class="navbar-nav">
-  <% Category.all.each do |cat| %>
-    <li class="nav-item">
-      <%= link_to cat.name, category_path(cat), class: "nav-link" %>
-    </li>
-  <% end %>
-</ul>
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-3">
+  <a class="navbar-brand" href="/">Technova Store</a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav me-auto">
+      <% if current_page?(root_path) %>
+        <li class="nav-item">
+          <%= link_to "Categories", categories_path, class: "nav-link" %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</nav>

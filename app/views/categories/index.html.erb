@@ -1,0 +1,9 @@
+<h2 class="text-center my-4">Browse Categories</h2>
+
+<div class="container">
+  <div class="list-group">
+    <% @categories.each do |cat| %>
+      <%= link_to cat.name, category_path(cat), class: "list-group-item list-group-item-action" %>
+    <% end %>
+  </div>
+</div>
