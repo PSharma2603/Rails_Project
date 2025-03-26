@@ -1,0 +1,7 @@
+<ul class="navbar-nav">
+  <% Category.all.each do |cat| %>
+    <li class="nav-item">
+      <%= link_to cat.name, category_path(cat), class: "nav-link" %>
+    </li>
+  <% end %>
+</ul>

@@ -18,6 +18,9 @@ Rails.application.routes.draw do
 
   get "/pages/:id", to: "static_pages#show", as: "static_page"
 
+  resources :categories, only: [:show]
+
+
 
 
   # Defines the root path route ("/")
