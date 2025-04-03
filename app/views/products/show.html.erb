@@ -11,5 +11,16 @@
   <p><strong>Description:</strong> <%= @product.description %></p>
   <p><strong>Price:</strong> $<%= @product.price %></p>
   <p><strong>Stock:</strong> <%= @product.stock_quantity %> available</p>
+
+  <!-- Add to Cart Form -->
+  <%= form_with url: add_to_cart_path, method: :post, local: true do %>
+    <%= hidden_field_tag :product_id, @product.id %>
+    <div class="mb-3">
+      <%= label_tag :quantity, "Quantity:" %>
+      <%= number_field_tag :quantity, 1, min: 1, class: "form-control w-25" %>
+    </div>
+    <%= submit_tag "Add to Cart", class: "btn btn-primary" %>
+  <% end %>
+
   <%= link_to "Back to Store", root_path, class: "btn btn-secondary mt-3" %>
 </div>

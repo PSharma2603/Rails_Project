@@ -1,7 +1,16 @@
 Rails.application.routes.draw do
+  get "cart/show"
+  get "cart/add"
+  get "cart/remove"
+  get "cart/update"
   get "static_pages/show"
   get "products/index"
   get "products/show"
+  get "/cart", to: "cart#show", as: "cart"
+  post "/cart/add", to: "cart#add", as: "add_to_cart"
+  patch "/cart/update", to: "cart#update", as: "update_cart"
+  delete "/cart/remove", to: "cart#remove", as: "remove_from_cart"
+
   
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
