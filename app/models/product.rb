@@ -1,7 +1,9 @@
 class Product < ApplicationRecord
   belongs_to :category
   has_one_attached :image
-
+  scope :on_sale, -> { where("stock_quantity > 25") }
+  scope :new_arrivals, -> { where("created_at >= ?", 3.days.ago) }
+  
   validates :name, presence: true
   validates :description, presence: true
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }

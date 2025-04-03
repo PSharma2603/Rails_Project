@@ -1,5 +1,12 @@
 <div class="container mt-5">
   <h2><%= @product.name %></h2>
+
+  <% if @product.image_filename.present? %>
+    <div class="mb-4">
+      <%= image_tag "products/#{@product.image_filename}", class: "img-fluid", alt: @product.name %>
+    </div>
+  <% end %>
+
   <p><strong>Category:</strong> <%= @product.category.name %></p>
   <p><strong>Description:</strong> <%= @product.description %></p>
   <p><strong>Price:</strong> $<%= @product.price %></p>
