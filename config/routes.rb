@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "profiles/edit"
+  get "profiles/update"
   # Devise routes for customer users
   devise_for :users
 
@@ -23,6 +25,8 @@ Rails.application.routes.draw do
   # Product and Category routes
   resources :products, only: [:index, :show]
   resources :categories, only: [:index, :show]
+# config/routes.rb
+  resource :profile, only: [:edit, :update]
 
   # Static pages
   get "/about", to: "static_pages#show", defaults: { id: 'about' }, as: :about_page

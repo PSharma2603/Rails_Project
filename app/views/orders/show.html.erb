@@ -50,5 +50,19 @@
         <td>$<%= number_with_precision(item.price_at_purchase * item.quantity, precision: 2) %></td>
       </tr>
     <% end %>
+    <!-- Tax Row -->
+    <tr>
+      <td colspan="3" style="text-align: right;"><strong>Tax</strong></td>
+      <td>
+        $<%= number_with_precision(gst + pst + hst, precision: 2) %>
+      </td>
+    </tr>
+    <!-- Grand Total Row -->
+    <tr>
+      <td colspan="3" style="text-align: right;"><strong>Grand Total</strong></td>
+      <td>
+        <strong>$<%= number_with_precision(total, precision: 2) %></strong>
+      </td>
+    </tr>
   </tbody>
 </table>

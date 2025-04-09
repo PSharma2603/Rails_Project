@@ -1,20 +1,26 @@
 class CartController < ApplicationController
   def show
-    @cart = Cart.new(session)
+    @cart = Cart.new(session[:cart] || {})
   end
 
   def add
-    Cart.new(session).add_product(params[:product_id], params[:quantity])
+    cart = Cart.new(session[:cart] || {})
+    cart.add_product(params[:product_id], params[:quantity])
+    session[:cart] = cart.items
     redirect_to cart_path
   end
 
   def update
-    Cart.new(session).update_product(params[:product_id], params[:quantity])
+    cart = Cart.new(session[:cart] || {})
+    cart.update_product(params[:product_id], params[:quantity])
+    session[:cart] = cart.items
     redirect_to cart_path
   end
 
   def remove
-    Cart.new(session).remove_product(params[:product_id])
+    cart = Cart.new(session[:cart] || {})
+    cart.remove_product(params[:product_id])
+    session[:cart] = cart.items
     redirect_to cart_path
   end
 end

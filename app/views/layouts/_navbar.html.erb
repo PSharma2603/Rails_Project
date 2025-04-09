@@ -18,6 +18,7 @@
     <ul class="navbar-nav ms-auto">
       <% if user_signed_in? %>
         <li class="nav-item">
+        <%= link_to "Profile", edit_profile_path %> |
           <span class="nav-link">Signed in as <strong><%= current_user.email %></strong></span>
         </li>
         <li class="nav-item">

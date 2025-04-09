@@ -2,18 +2,34 @@ class OrdersController < ApplicationController
   before_action :set_cart, only: [:new, :create]
 
   def new
-    @order = current_user ? current_user.orders.build : Order.new
+    @order = Order.new
     @provinces = Province.all
-    @order.build_address if current_user&.address.blank?
+  
+    # Show address form only if user has no saved profile address
+    if current_user && current_user.address.blank?
+      @order.build_address
+    end
   end
+    
 
   def create
-    @order = Order.new(order_params)
+    @order = Order.new
     @order.user = current_user if current_user
   
-    # Calculate subtotal and build order items
-    subtotal = 0
+    # Copy address from user profile if available
+    if current_user&.province_id
+      @order.build_address(
+        street_address: current_user.address&.street_address,
+        city: current_user.address&.city,
+        postal_code: current_user.address&.postal_code,
+        province_id: current_user.province_id
+      )
+    else
+      @order.assign_attributes(order_params)
+    end
   
+    # Build order items
+    subtotal = 0
     @cart.items.each do |product_id, quantity|
       product = Product.find_by(id: product_id)
       next unless product
@@ -28,10 +44,8 @@ class OrdersController < ApplicationController
       )
     end
   
-    # Fetch province and calculate tax
-    province_id = order_params[:address_attributes][:province_id]
-    province = Province.find_by(id: province_id)
-  
+    # Calculate tax
+    province = Province.find_by(id: @order.address&.province_id)
     gst = province&.gst.to_f * subtotal
     pst = province&.pst.to_f * subtotal
     hst = province&.hst.to_f * subtotal
@@ -39,19 +53,14 @@ class OrdersController < ApplicationController
     @order.total_price = subtotal + gst + pst + hst
   
     if @order.save
-      if current_user && current_user.address.blank? && @order.address.present?
-        current_user.create_address(@order.address.attributes.except("id", "addressable_type", "addressable_id", "created_at", "updated_at"))
-      end
-  
       session[:cart] = {}
       redirect_to order_path(@order), notice: "Order placed successfully."
     else
-      Rails.logger.error "ORDER ERROR: #{@order.errors.full_messages}"
       @provinces = Province.all
       render :new
     end
   end
-    
+        
   def show
     @order = Order.find(params[:id])
   end
