@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "orders/new"
+  get "orders/create"
   get "cart/show"
   get "cart/add"
   get "cart/remove"
@@ -26,6 +28,8 @@ Rails.application.routes.draw do
   # Product & category routes
   resources :products, only: [:index, :show]
   resources :categories, only: [:index, :show]
+  resources :orders, only: [:new, :create, :show]
+
 
   # ✅ Static Pages (newly added)
   get "/about", to: "static_pages#show", defaults: { id: 'about' }, as: :about_page
