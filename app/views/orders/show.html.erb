@@ -1,11 +1,54 @@
 <h2>Order Confirmation</h2>
 
-<p>Order placed successfully!</p>
-<p>Total: <strong>$<%= @order.total %></strong></p>
+<p><strong>Order ID:</strong> <%= @order.id %></p>
 
-<h4>Items:</h4>
+<% province = @order.address.province %>
+<% subtotal = @order.order_items.sum { |item| item.price_at_purchase * item.quantity } %>
+<% gst = province ? (subtotal * province.gst) : 0 %>
+<% pst = province ? (subtotal * province.pst) : 0 %>
+<% hst = province ? (subtotal * province.hst) : 0 %>
+<% total = subtotal + gst + pst + hst %>
+
+<h3>Price Summary</h3>
 <ul>
-  <% @order.order_items.each do |item| %>
-    <li><%= item.product.name %> x <%= item.quantity %> - $<%= item.price * item.quantity %></li>
+  <li><strong>Subtotal:</strong> $<%= number_with_precision(subtotal, precision: 2) %></li>
+  <% if province&.gst && province.gst > 0 %>
+    <li><strong>GST (<%= (province.gst * 100).round(2) %>%)</strong>: $<%= number_with_precision(gst, precision: 2) %></li>
   <% end %>
+  <% if province&.pst && province.pst > 0 %>
+    <li><strong>PST (<%= (province.pst * 100).round(2) %>%)</strong>: $<%= number_with_precision(pst, precision: 2) %></li>
+  <% end %>
+  <% if province&.hst && province.hst > 0 %>
+    <li><strong>HST (<%= (province.hst * 100).round(2) %>%)</strong>: $<%= number_with_precision(hst, precision: 2) %></li>
+  <% end %>
+  <li><strong>Total:</strong> $<%= number_with_precision(total, precision: 2) %></li>
 </ul>
+
+<h3>Shipping Address</h3>
+<p>
+  <%= @order.address.street_address %><br>
+  <%= @order.address.city %>, <%= province&.name %><br>
+  <%= @order.address.postal_code %>
+</p>
+
+<h3>Items Purchased</h3>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Quantity</th>
+      <th>Price at Purchase</th>
+      <th>Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @order.order_items.each do |item| %>
+      <tr>
+        <td><%= item.product.name %></td>
+        <td><%= item.quantity %></td>
+        <td>$<%= number_with_precision(item.price_at_purchase, precision: 2) %></td>
+        <td>$<%= number_with_precision(item.price_at_purchase * item.quantity, precision: 2) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

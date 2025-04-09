@@ -4,44 +4,54 @@ class OrdersController < ApplicationController
   def new
     @order = current_user ? current_user.orders.build : Order.new
     @provinces = Province.all
-
-    # Build address only for logged-in users if not already present
     @order.build_address if current_user&.address.blank?
   end
 
   def create
-    @order = current_user ? current_user.orders.build(order_params) : Order.new(order_params)
-
-    # Build order_items from cart
-    @order_items = session[:cart]&.map do |product_id, quantity|
-      product = Product.find(product_id)
-      OrderItem.new(product: product, quantity: quantity, price: product.price)
+    @order = Order.new(order_params)
+    @order.user = current_user if current_user
+  
+    # Calculate subtotal and build order items
+    subtotal = 0
+  
+    @cart.items.each do |product_id, quantity|
+      product = Product.find_by(id: product_id)
+      next unless product
+  
+      line_total = product.price * quantity.to_i
+      subtotal += line_total
+  
+      @order.order_items.build(
+        product: product,
+        quantity: quantity,
+        price_at_purchase: product.price
+      )
     end
-
-    @order.order_items = @order_items
-
-    # Calculate tax from province
+  
+    # Fetch province and calculate tax
     province_id = order_params[:address_attributes][:province_id]
     province = Province.find_by(id: province_id)
-    subtotal = @order_items.sum { |item| item.price * item.quantity }
-    tax_total = province ? subtotal * (province.gst + province.pst + province.hst) : 0
-    @order.total = subtotal + tax_total
-
+  
+    gst = province&.gst.to_f * subtotal
+    pst = province&.pst.to_f * subtotal
+    hst = province&.hst.to_f * subtotal
+  
+    @order.total_price = subtotal + gst + pst + hst
+  
     if @order.save
-      # Save address to user if they don’t already have one
-      if current_user&.address.blank? && @order.address.present?
-        current_user.address = @order.address
-        current_user.save
+      if current_user && current_user.address.blank? && @order.address.present?
+        current_user.create_address(@order.address.attributes.except("id", "addressable_type", "addressable_id", "created_at", "updated_at"))
       end
-
+  
       session[:cart] = {}
       redirect_to order_path(@order), notice: "Order placed successfully."
     else
+      Rails.logger.error "ORDER ERROR: #{@order.errors.full_messages}"
       @provinces = Province.all
       render :new
     end
   end
-
+    
   def show
     @order = Order.find(params[:id])
   end
@@ -54,7 +64,7 @@ class OrdersController < ApplicationController
 
   def order_params
     params.require(:order).permit(
-      address_attributes: [:street, :city, :postal_code, :province_id]
+      address_attributes: [:street_address, :city, :postal_code, :province_id]
     )
   end
 end
