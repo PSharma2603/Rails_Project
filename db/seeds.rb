@@ -3,21 +3,38 @@ require 'open-uri'
 require 'httparty'
 
 # Create admin user (only in development)
-AdminUser.find_or_create_by!(email: 'psharma9@rrc.ca') do |user|
-  user.password = 'password'
-  user.password_confirmation = 'password'
-end if Rails.env.development?
+if Rails.env.development?
+  AdminUser.find_or_create_by!(email: 'psharma9@rrc.ca') do |user|
+    user.password = 'password'
+    user.password_confirmation = 'password'
+  end
+end
 
 # Create categories if not present
-categories = {
-  "Smartphones" => nil,
-  "Laptops" => nil,
-  "SmartWatches" => nil,
-  "Headphones" => nil
-}
+category_names = ["Smartphones", "Laptops", "SmartWatches", "Headphones"]
+categories = {}
 
-categories.each_key do |cat_name|
-  categories[cat_name] = Category.find_or_create_by!(name: cat_name)
+category_names.each do |name|
+  categories[name] = Category.find_or_create_by!(name: name)
+end
+
+# Seed provinces only if none exist
+if Province.count == 0
+  Province.create!([
+    { name: 'Alberta', gst: 0.05, pst: 0.0, hst: 0.0 },
+    { name: 'British Columbia', gst: 0.05, pst: 0.07, hst: 0.0 },
+    { name: 'Manitoba', gst: 0.05, pst: 0.07, hst: 0.0 },
+    { name: 'New Brunswick', gst: 0.0, pst: 0.0, hst: 0.15 },
+    { name: 'Newfoundland and Labrador', gst: 0.0, pst: 0.0, hst: 0.15 },
+    { name: 'Nova Scotia', gst: 0.0, pst: 0.0, hst: 0.15 },
+    { name: 'Ontario', gst: 0.0, pst: 0.0, hst: 0.13 },
+    { name: 'Prince Edward Island', gst: 0.0, pst: 0.0, hst: 0.15 },
+    { name: 'Quebec', gst: 0.05, pst: 0.09975, hst: 0.0 },
+    { name: 'Saskatchewan', gst: 0.05, pst: 0.06, hst: 0.0 }
+  ])
+  puts "✅ Provinces seeded"
+else
+  puts "➡️ Provinces already seeded"
 end
 
 # Create 10 products if not enough exist
@@ -31,6 +48,9 @@ if Product.count < 10
       category: categories.values.sample
     )
   end
+  puts "✅ Products seeded"
+else
+  puts "➡️ Products already present"
 end
 
 # Unsplash Service to fetch images

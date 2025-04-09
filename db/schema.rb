@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_04_09_014139) do
+ActiveRecord::Schema[7.2].define(version: 2025_04_09_051618) do
   create_table "active_admin_comments", force: :cascade do |t|
     t.string "namespace"
     t.text "body"
@@ -54,14 +54,15 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_09_014139) do
   end
 
   create_table "addresses", force: :cascade do |t|
-    t.integer "user_id", null: false
     t.string "street_address"
     t.string "city"
     t.string "province"
     t.string "postal_code"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_addresses_on_user_id"
+    t.string "addressable_type"
+    t.integer "addressable_id"
+    t.index ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable"
   end
 
   create_table "admin_users", force: :cascade do |t|
@@ -168,7 +169,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_04_09_014139) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "addresses", "users"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "users"
