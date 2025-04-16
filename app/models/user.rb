@@ -8,4 +8,6 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :address
   has_many :orders
   belongs_to :province, optional: true
+
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }
 end

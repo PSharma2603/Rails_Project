@@ -1,4 +1,3 @@
-# app/controllers/profiles_controller.rb
 class ProfilesController < ApplicationController
   before_action :authenticate_user!
 
@@ -13,11 +12,13 @@ class ProfilesController < ApplicationController
     if @user.update(user_params)
       redirect_to root_path, notice: "Profile updated with address and province."
     else
+      Rails.logger.debug "User Errors: #{@user.errors.full_messages}"
+      Rails.logger.debug "Address Errors: #{@user.address&.errors&.full_messages}"
       @provinces = Province.all
       render :edit
     end
   end
-
+  
   private
 
   def user_params

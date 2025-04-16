@@ -50,19 +50,35 @@
         <td>$<%= number_with_precision(item.price_at_purchase * item.quantity, precision: 2) %></td>
       </tr>
     <% end %>
-    <!-- Tax Row -->
-    <tr>
-      <td colspan="3" style="text-align: right;"><strong>Tax</strong></td>
-      <td>
-        $<%= number_with_precision(gst + pst + hst, precision: 2) %>
-      </td>
-    </tr>
+
+    <!-- GST Row -->
+    <% if province&.gst && province.gst > 0 %>
+      <tr>
+        <td colspan="3" style="text-align: right;"><strong>GST (<%= (province.gst * 100).round(2) %>%)</strong></td>
+        <td>$<%= number_with_precision(gst, precision: 2) %></td>
+      </tr>
+    <% end %>
+
+    <!-- PST Row -->
+    <% if province&.pst && province.pst > 0 %>
+      <tr>
+        <td colspan="3" style="text-align: right;"><strong>PST (<%= (province.pst * 100).round(2) %>%)</strong></td>
+        <td>$<%= number_with_precision(pst, precision: 2) %></td>
+      </tr>
+    <% end %>
+
+    <!-- HST Row -->
+    <% if province&.hst && province.hst > 0 %>
+      <tr>
+        <td colspan="3" style="text-align: right;"><strong>HST (<%= (province.hst * 100).round(2) %>%)</strong></td>
+        <td>$<%= number_with_precision(hst, precision: 2) %></td>
+      </tr>
+    <% end %>
+
     <!-- Grand Total Row -->
     <tr>
       <td colspan="3" style="text-align: right;"><strong>Grand Total</strong></td>
-      <td>
-        <strong>$<%= number_with_precision(total, precision: 2) %></strong>
-      </td>
+      <td><strong>$<%= number_with_precision(total, precision: 2) %></strong></td>
     </tr>
   </tbody>
 </table>

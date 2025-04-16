@@ -1,19 +1,32 @@
 <h2>Edit Profile</h2>
 
 <%= form_with model: @user, url: profile_path, local: true do |f| %>
-  <%= f.label :province_id, "Province" %>
-  <%= f.collection_select :province_id, @provinces, :id, :name %><br><br>
+  <%= f.label :province_id, "Address Province" %>
+  <%= f.collection_select :province_id, @provinces, :id, :name %>
 
   <%= f.fields_for :address do |a| %>
+    <%= a.hidden_field :id %>
+
     <%= a.label :street_address %>
-    <%= a.text_field :street_address %><br>
+    <%= a.text_field :street_address %>
 
     <%= a.label :city %>
-    <%= a.text_field :city %><br>
+    <%= a.text_field :city %>
 
     <%= a.label :postal_code %>
-    <%= a.text_field :postal_code %><br>
+    <%= a.text_field :postal_code %>
+
+    <%= a.label :province_id, "User Province" %>
+    <%= a.collection_select :province_id, @provinces, :id, :name %>
   <% end %>
 
   <%= f.submit "Save" %>
+
+  <% if @user.errors.any? %>
+    <ul>
+      <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  <% end %>
 <% end %>
