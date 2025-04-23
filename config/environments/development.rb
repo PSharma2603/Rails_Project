@@ -35,7 +35,8 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true 
+  config.action_mailer.perform_deliveries = true
 
   # Disable caching for Action Mailer templates even if Action Controller
   # caching is enabled.
@@ -63,7 +64,17 @@ Rails.application.configure do
 
   # Suppress logger output for asset requests.
   config.assets.quiet = true
-
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.mailgun.org',
+    port:                 587,
+    domain:               'sandbox92f456eaa3fb4bb48aab077c219fd312.mailgun.org',
+    user_name:            'postmaster@sandbox92f456eaa3fb4bb48aab077c219fd312.mailgun.org',
+    password:             '1e3b7caf73c9b2322006f628d570428e-10b6f382-309f3792',
+    authentication:       'plain',
+    enable_starttls_auto: true
+  }
+  
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

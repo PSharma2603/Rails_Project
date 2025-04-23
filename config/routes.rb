@@ -3,7 +3,10 @@ Rails.application.routes.draw do
   get "profiles/edit"
   get "profiles/update"
   # Devise routes for customer users
-  devise_for :users
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
+  
 
   # Devise routes for admin (ActiveAdmin)
   devise_for :admin_users, ActiveAdmin::Devise.config

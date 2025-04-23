@@ -70,7 +70,10 @@ Devise.setup do |config|
   # given strategies, for example, `config.params_authenticatable = [:database]` will
   # enable it only for database (email + password) authentication.
   # config.params_authenticatable = true
-
+  Warden::Manager.after_authentication do |user, auth, opts|
+    UserMailer.welcome_email(user).deliver_later if user.email.present?
+  end
+  
   # Tell if authentication through HTTP Auth is enabled. False by default.
   # It can be set to an array that will enable http authentication only for the
   # given strategies, for example, `config.http_authenticatable = [:database]` will
