@@ -66,3 +66,5 @@ group :test do
 end
 
 gem "sassc", "~> 2.4"
+
+gem "stripe", "~> 15.0"
