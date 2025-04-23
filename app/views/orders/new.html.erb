@@ -10,17 +10,17 @@
   </div>
 <% end %>
 
-<%= form_with model: @order, url: orders_path, local: true do |f| %>
+<%= form_with model: @order, url: orders_path, local: true, data: { turbo: false } do |f| %>
   <% if current_user.nil? || current_user.address.blank? %>
     <h3>Address Info</h3>
     <%= f.fields_for :address do |a| %>
       <%= a.label :street_address %>
-      <%= a.text_field :street_address %><br>
+      <%= a.text_field :street_address, required: true %><br>
 
-      <%= a.label :city %>
+      <%= a.label :city, required: true %>
       <%= a.text_field :city %><br>
 
-      <%= a.label :postal_code %>
+      <%= a.label :postal_code, required: true %>
       <%= a.text_field :postal_code %><br>
 
       <%= a.label :province_id %>
