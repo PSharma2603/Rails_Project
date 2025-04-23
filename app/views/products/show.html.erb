@@ -7,11 +7,11 @@
     </div>
   <% elsif @product.image_filename.present? %>
     <div class="mb-4">
-      <%= image_tag "products/#{@product.image_filename}", class: "img-fluid", alt: @product.name %>
+      <%= image_tag "products/#{@product.image_filename}", class: "img-fluid", size: "300x200", alt: @product.name %>
     </div>
   <% else %>
     <div class="mb-4">
-      <%= image_tag "products/placeholder.png", class: "img-fluid", alt: "Placeholder" %>
+      <%= image_tag "products/placeholder.png", class: "img-fluid", size: "300x200", alt: "Image not available" %>
     </div>
   <% end %>
 
@@ -22,7 +22,7 @@
 
   <!-- Add to Cart Form -->
   <%= form_with url: add_to_cart_path, method: :post, local: true do %>
-    <%= hidden_field_tag :product_id, @product.id %>
+    <%= hidden_field_tag :product_id, @product.id, autocomplete: nil  %>
     <div class="mb-3">
       <%= label_tag :quantity, "Quantity:" %>
       <%= number_field_tag :quantity, 1, min: 1, class: "form-control w-25" %>
