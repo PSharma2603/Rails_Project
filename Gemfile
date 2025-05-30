@@ -36,7 +36,7 @@ gem 'image_processing'
 gem 'kaminari'
 gem 'faker'
 gem 'httparty'
-gem 'mailgun-ruby', '~>1.2.6'
+gem 'mailgun-ruby', '~>1.3.6'
 gem 'dotenv-rails', groups: [:development, :test] # Optional for storing API keys securely
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
